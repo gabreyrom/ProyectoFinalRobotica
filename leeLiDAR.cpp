@@ -23,7 +23,8 @@ void poseMessageReceived (const sensor_msgs::LaserScan& msg1){
 }
 
 int main (int argc, char **argv){
-	double  distancia, angulo;
+	double  distancia, angulo, deltaT;
+	ros::Time time1, time2;
 	int cont;
 	// Inicializa ROS system y crea un nodo.
 	ros::init(argc, argv, "car_controller");
@@ -37,6 +38,8 @@ int main (int argc, char **argv){
 	// Ciclo a hz Hz
 	ros::Rate rate (10);
 
+	time1  =ros::Time::now();
+	time2  =ros::Time::now();
 
 	//Ciclo principal
     	while (ros::ok()) {
@@ -45,7 +48,12 @@ int main (int argc, char **argv){
 		angulo=0;
 		cont=0;
 		flag1=false;
+
 		if (flag2){
+			time2  =ros::Time::now();
+			deltaT=time2.toSec()-time1.toSec();
+			time1=time2;
+
 			//Recorrer el vector de distancias
 			for(int i=0; i<360; i++){
 				if(datos[i]>0.2 && datos[i]<inf){
@@ -67,9 +75,11 @@ int main (int argc, char **argv){
 				distancia=distancia/cont;
 				angulo=angulo/cont;
 			}
-			ROS_INFO_STREAM("angulo: "<<angulo<<" distancia: "<<distancia);
+			ROS_INFO_STREAM("angulo: "<<angulo<<" distancia: "<<distancia << " Time1: " << time1.toSec() << " Time2: " << time2.toSec() << " DeltaT: " << deltaT);
 			flag2=false;
+			
 		}
+
 
 		
 		ros::spinOnce();
