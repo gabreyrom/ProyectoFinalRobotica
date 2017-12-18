@@ -7,13 +7,11 @@
 #include <math.h>
 #include <limits>
 
-//variables recibidas
-double deltaangulo, angulomin, distancia, angulo;
+//variables LiDAR
+double deltaangulo, angulomin;
 double inf = std::numeric_limits<double>::infinity();
-int cont;
 bool flag1, flag2;
 std::vector<float> datos;
-//variables internas de control
 
 // callback para leer distancia del obstaculo
 void poseMessageReceived (const sensor_msgs::LaserScan& msg1){
@@ -25,6 +23,8 @@ void poseMessageReceived (const sensor_msgs::LaserScan& msg1){
 }
 
 int main (int argc, char **argv){
+	double  distancia, angulo;
+	int cont;
 	// Inicializa ROS system y crea un nodo.
 	ros::init(argc, argv, "car_controller");
 	ros::NodeHandle nh ;
@@ -40,11 +40,13 @@ int main (int argc, char **argv){
 
 	//Ciclo principal
     	while (ros::ok()) {
+    	//Procesar datos del LiDAR
 		distancia=0;
 		angulo=0;
 		cont=0;
 		flag1=false;
 		if (flag2){
+			//Recorrer el vector de distancias
 			for(int i=0; i<360; i++){
 				if(datos[i]>0.2 && datos[i]<inf){
 					distancia=distancia+datos[i];
@@ -60,6 +62,7 @@ int main (int argc, char **argv){
 					}
 				}
 			}
+			//Verificar si se detecto obstaculo
 			if(cont>0){
 				distancia=distancia/cont;
 				angulo=angulo/cont;
