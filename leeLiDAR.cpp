@@ -50,6 +50,7 @@ int main (int argc, char **argv){
 		flag1=false;
 
 		if (flag2){
+			//Obtener tiempo trascurrido entre mediciones
 			time2  =ros::Time::now();
 			deltaT=time2.toSec()-time1.toSec();
 			time1=time2;
@@ -75,8 +76,12 @@ int main (int argc, char **argv){
 				distancia=distancia/cont;
 				angulo=angulo/cont;
 			}
-			ROS_INFO_STREAM("angulo: "<<angulo<<" distancia: "<<distancia << " Time1: " << time1.toSec() << " Time2: " << time2.toSec() << " DeltaT: " << deltaT);
+			ROS_INFO_STREAM("angulo: "<<angulo<<" distancia: "<<distancia << " DeltaT: " << deltaT);
 			flag2=false;
+
+			//Filtro de Kalman
+
+			
 			
 		}
 
