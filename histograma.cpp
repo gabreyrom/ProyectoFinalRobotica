@@ -7,7 +7,20 @@
 #include <iostream>
 #include <math.h>
 
-//variables de estado
+/*Arreglo de probabilidades para cada una de las probabilidades
+ *Dependiendo de qué líneas se ven, es dónde puede estar el auto 
+ *
+ *Left	Center	Right		Probabilidad
+ *0	0	0		Desconocido
+ *0	0	1		Derecha-->Sobre línea derecha
+ *0	1	0		Centro-->Centro con probabilidad en carriles
+ *0	1	1		CentroDer-->Carril derecho
+ *1	0	0		Izquierda-->Sobre línea izquierda
+ *1	0	1		Centro-->Centro con probabilidad en carriles
+ *1	1	0		CentroIzq-->Carril izquierdo
+ *1	1	1		Centrado-->Sobre la línea central
+ *
+*/
 double estado[8]={0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125};
 double desconocido[8]={0.015,0.015,0.015,0.015,0.015,0.015,0.015,0.895};
 double derecha[8]={0.015,0.015,0.015,0.015,0.2,0.225,0.5,0.015};
@@ -17,7 +30,7 @@ double izquierda[8]={0.5,0.225,0.2,0.015,0.015,0.015,0.015,0.015};
 double centroIzq[8]={0.015,0.1,0.725,0.1,0.015,0.015,0.015,0.015};
 double centrado[8]={0.015,0.015,0.25,0.425,0.25,0.015,0.015,0.015};
 
-//variables internas de control
+//variables internas de control sobre qué lína ve
 bool line_left,line_right,line_center;
 
 
@@ -34,8 +47,9 @@ void lineRight (const std_msgs::Int32MultiArray& msg3){
 	line_right=true;
 }
 
+//Función que hace la multiplicación de probabilidades y su normalización
 void actualizaEst (double a[], double b[]){
-	int nConv=8;
+
 	int i,j;
 	double suma=0.0;
 	double edoAct[8]={0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -56,6 +70,7 @@ void actualizaEst (double a[], double b[]){
 
 int main (int argc, char **argv){
 
+//Se inicializan las banderas como verdaderas
 	line_left=true;
 	line_right=true;
 	line_center=true;
@@ -63,7 +78,7 @@ int main (int argc, char **argv){
 	// Inicializa ROS system y crea un nodo.
 	ros::init(argc, argv, "robot_controller");
 	ros::NodeHandle nh ;
-	// Crea un objeto publicador .
+	// Crea un objeto publicador para el estadoEstimado (probabilidad de estar en cada línea)
 	ros::Publisher pubEst=nh.advertise<std_msgs::Float32MultiArray>("/estadoEstimado",1000);
 	// Crea un objeto suscriptor
 	ros::Subscriber subPCentro = nh.subscribe("/points/center", 1000, &lineCenter);
@@ -77,7 +92,7 @@ int main (int argc, char **argv){
 	ros::Rate rate (3);
 
 	while (ros::ok()) {
-
+	//Se toman todas las condiciones posibles para cada iteración
 		if (line_left && line_center && line_right)
 		{
 			actualizaEst(estado,centrado);
@@ -118,12 +133,13 @@ int main (int argc, char **argv){
 			ROS_INFO_STREAM("Desconocido");
 		}
 
+		//Se limpia el arreglo auxiliar para publicar y se le meten los datos
 		array.data.clear();
 
 		for (int i = 0; i < 8; i++){
 			array.data.push_back(estado[i]);
 		}
-
+		//Se publica y se vuelven falsas las banderas
 		pubEst.publish(array);
 		line_left=false;
 		line_right=false;
