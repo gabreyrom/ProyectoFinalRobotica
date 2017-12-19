@@ -22,10 +22,10 @@ int sign;
 
 // callback para leer la posicion deseada del movil (posición del obstáculo)
 void poseDMessageReceived (const geometry_msgs::Twist& msg2){
-	xd=linear.x;
-	yd=linear.y;
-	Velxd=angular.x;
-	Velyd=angular.y;
+	xd=msg2.linear.x;
+	yd=msg2.linear.y;
+	Velxd=msg2.angular.x;
+	Velyd=msg2.angular.y;
 	flag2=true;
 	//Condiciones iniciales	
 	deltax=(xd-0);
@@ -93,11 +93,11 @@ int main (int argc, char **argv){
 				v=0;
 				flag2=false;	
 			}else{
+				theta=atan(yd/xd)*180/3.1416;
 				rho=error;
 				alpha=(atan(deltay/deltax)-theta)*180/3.1416;
 				beta=-(theta*180/3.1416)-alpha;
-
-				v=krho*rho*sign;
+				v=krho*sign*sqrt(xd² + yd²);
 				gamma=(kalpha*alpha+kbeta*beta)*sign;
 				//Poner maximo a velocidad y giro
 				if(v>6){
