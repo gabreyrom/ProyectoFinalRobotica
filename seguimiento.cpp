@@ -30,12 +30,9 @@ void poseMessageReceived (const geometry_msgs::Twist& msg2){
 	//Condiciones iniciales	
 	deltax=(xd-0);
 	deltay=(yd-0);
-	vectx=deltay;
-	vecty=deltay;
-	a=deltax*vectx+deltay*vecty;
 	//Si el punto deseado esta detras del movil, avanza de reversa
 	ROS_INFO_STREAM("Producto punto: "<< a);
-	if (a<0){
+	if (deltay<0 && deltax<0){
 		sign=-1;
 	}else{
 		sign=1;
@@ -44,7 +41,7 @@ void poseMessageReceived (const geometry_msgs::Twist& msg2){
 
 int main (int argc, char **argv){
 	//variables internas
-	double rho, alpha, beta, krho, kalpha, kbeta, w, error;	
+	double krho, kgamma, w, error;	
 	//variables de publicacion
 	double v, gamma;
 
@@ -71,10 +68,10 @@ int main (int argc, char **argv){
 	L=0.32;
 
 	//Valores de control
-	krho=1;
-	kalpha=1.5;
-	kbeta=-1;
-	e=0.2;
+	krho=3;
+	kgamma=2;
+	
+	e=1;
 	sign=1;
 	
 	//Ángulos alpha y beta se calculan en radianes
@@ -93,12 +90,8 @@ int main (int argc, char **argv){
 				v=0;
 				flag2=false;	
 			}else{
-				theta=atan(yd/xd)*180/3.1416;
-				rho=error;
-				alpha=(atan(deltay/deltax)-theta)*180/3.1416;
-				beta=-(theta*180/3.1416)-alpha;
-				v=krho*sign*sqrt(xd*xd + yd*yd);
-				gamma=(kalpha*alpha+kbeta*beta)*sign;
+				gamma=kgamma*atan(yd/xd)*180/3.1416*sign;
+				v=krho*sqrt(xd*xd + yd*yd);
 				//Poner maximo a velocidad y giro
 				if(v>6){
 					v=6;
