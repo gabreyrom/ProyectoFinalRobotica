@@ -12,6 +12,7 @@ double deltaangulo, angulomin;
 double inf = std::numeric_limits<double>::infinity();
 double poseEst[4][1], poseAct[4][1], F[4][4], H[2][4], P[4][4], Pf[4][4], s[2][2], y[2][1], z[2][1], GanK[4][2];
 double aux[4][4], aux2[2][4], aux3[4][2], aux4[4][4], Ftrans[4][4], Htrans[4][2], sinv[2][2], Identity[4][4];
+double posx,posy, deltaT;
 bool flag1, flag2;
 std::vector<float> datos;
 
@@ -74,7 +75,7 @@ void prediction(){
 
 void actualizacion(){
 	int i,j,k,a, b, c, d,r1,c1,c2,r;
-	//Obtener Y
+	//Obtener y
 	r1=2;
 	c1=4;
 	c2=1;
@@ -192,8 +193,57 @@ void actualizacion(){
 
 }
 
+void inicializacion(){
+	F[0][0]=1;
+	F[0][1]=0;
+	F[0][2]=deltaT;
+	F[0][3]=0;
+
+	F[1][0]=0;
+	F[1][1]=1;
+	F[1][2]=0;
+	F[1][3]=deltaT;
+
+	F[2][0]=0;
+	F[2][1]=0;
+	F[2][2]=1;
+	F[2][3]=0;
+
+	F[3][0]=0;
+	F[3][1]=0;
+	F[3][2]=0;
+	F[3][3]=1;
+
+	H[0][0]=1;
+	H[0][1]=0;
+	H[0][2]=0;
+	H[0][3]=0;
+
+	H[1][0]=0;
+	H[1][1]=1;
+	H[1][2]=0;
+	H[1][3]=0;
+
+	poseAct[0][0]=0;
+	poseAct[1][0]=0;
+	poseAct[2][0]=0;
+	poseAct[3][0]=0;
+
+	for(int i = 0; i < 4; ++i)
+        for(int j = 0; j < 4; ++j)
+        	Identity[i][j]=0;
+    Identity[0][0]=1;
+    Identity[1][1]=1;
+    Identity[2][2]=1;
+    Identity[3][3]=1;
+
+	for(int i = 0; i < 4; ++i)
+        for(int j = 0; j < 4; ++j)
+        	Pf[i][j]=Identity[i][j];
+}
+
 int main (int argc, char **argv){
-	double  distancia, angulo, deltaT;
+	double  distancia, angulo;
 	int i,j;
 	ros::Time time1, time2;
 	int cont;
@@ -212,17 +262,8 @@ int main (int argc, char **argv){
 	time1  =ros::Time::now();
 	time2  =ros::Time::now();
 
-	for(i = 0; i < 4; ++i)
-        for(j = 0; j < 4; ++j)
-        	Identity[i][j]=0;
-    Identity[0][0]=1;
-    Identity[1][1]=1;
-    Identity[2][2]=1;
-    Identity[3][3]=1;
-
+    inicializacion();
     
-
-
 	//Ciclo principal
     	while (ros::ok()) {
     	//Procesar datos del LiDAR
@@ -261,12 +302,20 @@ int main (int argc, char **argv){
 			ROS_INFO_STREAM("angulo: "<<angulo<<" distancia: "<<distancia << " DeltaT: " << deltaT);
 			flag2=false;
 
+			F[0][2]=deltaT;
+			F[1][3]=deltaT;
+
+			posx=distancia*cos(angulo);
+			posy=distancia*sin(angulo);
+
+			z[0][0]=posx;
+			z[1][0]=posy;
+
 			//Filtro de Kalman
-
-			
+			prediction();
+			actualizacion();
+			ROS_INFO_STREAM("x="<<poseAct[0][0]<<" y="<<poseAct[1][0]<<" Velx="<<poseAct[2][0]<<" Vely="<<poseAct[3][0]);
 		}
-
-
 		
 		ros::spinOnce();
 		// Espera hasta que es tiempo de la siguiente iteracion
