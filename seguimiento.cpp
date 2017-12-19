@@ -58,8 +58,8 @@ int main (int argc, char **argv){
 	ros::Publisher pubS=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini/manual_control/steering",1000);
 	ros::Publisher pubV=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini/manual_control/velocity",1000);
 	// Crea un objeto suscriptor
-	ros::Subscriber subP = nh.subscribe("robot/pose", 1000, &poseMessageReceived);
-	ros::Subscriber subPD = nh.subscribe("robot/next_pose", 1000, &poseDMessageReceived);
+	ros::Subscriber subP = nh.subscribe("/pose_objetivo", 1000, &poseMessageReceived);
+	//ros::Subscriber subPD = nh.subscribe("robot/next_pose", 1000, &poseDMessageReceived);
 	//Crea el objeto mensaje
 	std_msgs::Float32 msgSteering;
 	std_msgs::Float32 msgVelocity;
