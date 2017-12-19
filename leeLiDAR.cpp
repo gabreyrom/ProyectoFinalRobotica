@@ -86,11 +86,6 @@ void actualizacion(){
 	int i,j,k,r1,c1,c2,r;
 	double a, b, c, d, ruido;
 	ruido=0.1;
-	//ROS_INFO_STREAM("HTRANS");
-	//ROS_INFO_STREAM(""<< Htrans[0][0] << " " << Htrans[0][1]);
-	//ROS_INFO_STREAM(""<< Htrans[1][0] << " " << Htrans[1][1]);
-    //ROS_INFO_STREAM(""<< Htrans[2][0] << " " << Htrans[2][1]);
-    //ROS_INFO_STREAM(""<< Htrans[3][0] << " " << Htrans[3][1]);
 
 	//Obtener v
 	r1=2;
@@ -295,6 +290,12 @@ void inicializacion(){
         }
     }
 
+    //ROS_INFO_STREAM("HTRANS");
+	//ROS_INFO_STREAM(""<< Htrans[0][0] << " " << Htrans[0][1]);
+	//ROS_INFO_STREAM(""<< Htrans[1][0] << " " << Htrans[1][1]);
+    //ROS_INFO_STREAM(""<< Htrans[2][0] << " " << Htrans[2][1]);
+    //ROS_INFO_STREAM(""<< Htrans[3][0] << " " << Htrans[3][1]);
+    
 	poseAct[0][0]=0;
 	poseAct[1][0]=0;
 	poseAct[2][0]=0;
