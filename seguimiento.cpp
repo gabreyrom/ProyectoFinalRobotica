@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <geometry_msgs/Pose2D.h>
+#include <geometry_msgs/Twist.h>
 #include <std_msgs/Float32.h>
 #include <stdlib.h> 
 #include <iostream>
@@ -55,8 +55,8 @@ int main (int argc, char **argv){
 	ros::init(argc, argv, "seguimiento_obstaculo");
 	ros::NodeHandle nh ;
 	// Crea un objeto publicador .
-	ros::Publisher pubS=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini/manual_control/steering",1000);
-	ros::Publisher pubV=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini/manual_control/velocity",1000);
+	ros::Publisher pubS=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini_1/manual_control/steering",1000);
+	ros::Publisher pubV=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini_1/manual_control/velocity",1000);
 	// Crea un objeto suscriptor
 	ros::Subscriber subP = nh.subscribe("/pose_objetivo", 1000, &poseMessageReceived);
 	//ros::Subscriber subPD = nh.subscribe("robot/next_pose", 1000, &poseDMessageReceived);
@@ -65,7 +65,7 @@ int main (int argc, char **argv){
 	std_msgs::Float32 msgVelocity;
 
 	// Ciclo a 10 Hz
-	ros::Rate rate (10);
+	ros::Rate rate (5);
 
 	//Constante del auto	
 	L=0.32;
