@@ -13,24 +13,25 @@ bool flag1,flag2;
 int sign;
 
 // callback para leer la posicion del movil
-void poseMessageReceived (const geometry_msgs::Pose2D& msg1){
-	x=msg1.x;
-	y=msg1.y;
-	theta=msg1.theta;
-	flag1=true;
-}
+// void poseMessageReceived (const geometry_msgs::Pose2D& msg1){
+// 	x=msg1.x;
+// 	y=msg1.y;
+// 	theta=msg1.theta;
+// 	flag1=true;
+// }
 
-// callback para leer la posicion deseada del movil
-void poseDMessageReceived (const geometry_msgs::Pose2D& msg2){
-	xd=msg2.x;
-	yd=msg2.y;
-	thetad=msg2.theta;
+// callback para leer la posicion deseada del movil (posición del obstáculo)
+void poseDMessageReceived (const geometry_msgs::Twist& msg2){
+	xd=linear.x;
+	yd=linear.y;
+	Velxd=angular.x;
+	Velyd=angular.y;
 	flag2=true;
 	//Condiciones iniciales	
-	deltax=(xd-x);
-	deltay=(yd-y);
-	vectx=cos(theta);
-	vecty=sin(theta);
+	deltax=(xd-0);
+	deltay=(yd-0);
+	vectx=deltay;
+	vecty=deltay;
 	a=deltax*vectx+deltay*vecty;
 	//Si el punto deseado esta detras del movil, avanza de reversa
 	ROS_INFO_STREAM("Producto punto: "<< a);
@@ -51,7 +52,7 @@ int main (int argc, char **argv){
 	flag2=false;
 	
 	// Inicializa ROS system y crea un nodo.
-	ros::init(argc, argv, "robot_controller");
+	ros::init(argc, argv, "seguimiento_obstaculo");
 	ros::NodeHandle nh ;
 	// Crea un objeto publicador .
 	ros::Publisher pubS=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini/manual_control/steering",1000);
@@ -63,13 +64,8 @@ int main (int argc, char **argv){
 	std_msgs::Float32 msgSteering;
 	std_msgs::Float32 msgVelocity;
 
-
-	//Obtener informacion del usuario
-	ROS_INFO_STREAM("Indique los Hertz");
-	std::cin >> hz;
-
-	// Ciclo a hz Hz
-	ros::Rate rate (hz);
+	// Ciclo a 10 Hz
+	ros::Rate rate (10);
 
 	//Constante del auto	
 	L=0.32;
@@ -86,10 +82,10 @@ int main (int argc, char **argv){
 
 	//Ciclo principal
     	while (ros::ok()) {
-		if (flag1 && flag2){
+		if (flag2){
 			//Calculos para pose deseada
-			deltax=(xd-x);
-			deltay=(yd-y);
+			deltax=(xd-0);
+			deltay=(yd-0);
 			//Detener si la distancia es tolerable
 			error=sqrt(deltax*deltax+deltay*deltay);
 			if(e>error){
@@ -123,7 +119,7 @@ int main (int argc, char **argv){
 			pubV.publish(msgVelocity);
 			ROS_INFO_STREAM("Velocity: "<< v<< ", Gamma: " << gamma);
 			
-			flag1=false;
+			//flag1=false;
 		}else{
 			//No se sabe de la ubicacion del auto
 			//Publicar detenerse
