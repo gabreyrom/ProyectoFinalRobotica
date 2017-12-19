@@ -10,6 +10,8 @@
 //variables LiDAR
 double deltaangulo, angulomin;
 double inf = std::numeric_limits<double>::infinity();
+double poseEst[4][1], poseAct[4][1], F[4][4], H[2][4], P[4][4], Pf[4][4], s[2][2], y[2][1], z[2][1], GanK[4][2];
+double aux[4][4], aux2[2][4], aux3[4][2], aux4[4][4], Ftrans[4][4], Htrans[4][2], sinv[2][2], Identity[4][4];
 bool flag1, flag2;
 std::vector<float> datos;
 
@@ -22,8 +24,177 @@ void poseMessageReceived (const sensor_msgs::LaserScan& msg1){
 	flag2=true;
 }
 
+void prediction(){
+	int i,j,k,r1,c1,c2,r,c;
+	//Obtener x gorro
+	r1=4;
+	c1=4;
+	c2=1;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	poseEst[i][j] = 0;
+            for(k = 0; k < c1; ++k)
+            {
+                poseEst[i][j] += F[i][k] * poseAct[k][j];
+            }
+        }
+    //Obtener P gorro
+    r1=4;
+	c1=4;
+	c2=4;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	aux[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                aux[i][j] += F[i][k] * Pf[k][j];
+            }
+        }
+    r=4;
+    c=4;
+    for(i = 0; i < r; ++i)
+        for(j = 0; j < c; ++j)
+        {
+            Ftrans[j][i]=F[i][j];
+        }
+
+    r1=4;
+	c1=4;
+	c2=4;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+            P[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                P[i][j] += aux[i][k] * Ftrans[k][j];
+            }
+        }
+
+}
+
+void actualizacion(){
+	int i,j,k,a, b, c, d,r1,c1,c2,r;
+	//Obtener Y
+	r1=2;
+	c1=4;
+	c2=1;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	y[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                y[i][j] += H[i][k] * poseEst[k][j];
+            }
+            y[i][j] = z[i][j]-y[i][j];
+        }
+    //Obtener S
+    r1=2;
+	c1=4;
+	c2=4;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+            aux2[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                aux2[i][j] += H[i][k] * P[k][j];
+            }
+        }
+
+    r=2;
+    c=4;
+    for(i = 0; i < r; ++i)
+        for(j = 0; j < c; ++j)
+        {
+            Htrans[j][i]=H[i][j];
+        }
+
+    r1=4;
+	c1=4;
+	c2=4;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	s[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                s[i][j] += aux2[i][k] * Htrans[k][j];
+            }
+        }
+
+    //Obtener S inversa
+    a=s[0][0];
+    b=s[0][1];
+    c=s[1][0];
+    d=s[1][1];
+    sinv[0][0]=d/(a*d-b*c);
+    sinv[0][1]=-b/(a*d-b*c);
+    sinv[1][0]=-c/(a*d-b*c);
+    sinv[1][1]=a/(a*d-b*c);
+    //Obtener K
+    r1=4;
+	c1=4;
+	c2=2;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	aux3[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                aux3[i][j] += P[i][k] * Htrans[k][j];
+            }
+        }
+    r1=4;
+	c1=2;
+	c2=2;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	GanK[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                GanK[i][j] += aux3[i][k] * sinv[k][j];
+            }
+        }
+    //Obtener P gorro
+    r1=4;
+	c1=2;
+	c2=4;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	aux4[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                aux4[i][j] += GanK[i][k] * H[k][j];
+            }
+            aux4[i][j]=Identity[i][j]-aux4[i][j];
+        }
+    r1=4;
+	c1=4;
+	c2=4;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	Pf[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                Pf[i][j] += aux4[i][k] * P[k][j];
+            }
+        }
+    //Obtener poseAct
+    r1=4;
+	c1=2;
+	c2=1;
+	for(i = 0; i < r1; ++i)
+        for(j = 0; j < c2; ++j){
+        	poseAct[i][j]=0;
+            for(k = 0; k < c1; ++k)
+            {
+                poseAct[i][j] += GanK[i][k] * y[k][j];
+            }
+            poseAct[i][j]=poseAct[i][j]+poseEst[i][j];
+        }
+
+}
+
 int main (int argc, char **argv){
 	double  distancia, angulo, deltaT;
+	int i,j;
 	ros::Time time1, time2;
 	int cont;
 	// Inicializa ROS system y crea un nodo.
@@ -41,6 +212,17 @@ int main (int argc, char **argv){
 	time1  =ros::Time::now();
 	time2  =ros::Time::now();
 
+	for(i = 0; i < 4; ++i)
+        for(j = 0; j < 4; ++j)
+        	Identity[i][j]=0;
+    Identity[0][0]=1;
+    Identity[1][1]=1;
+    Identity[2][2]=1;
+    Identity[3][3]=1;
+
+    
+
+
 	//Ciclo principal
     	while (ros::ok()) {
     	//Procesar datos del LiDAR
@@ -56,7 +238,7 @@ int main (int argc, char **argv){
 			time1=time2;
 
 			//Recorrer el vector de distancias
-			for(int i=0; i<360; i++){
+			for(i=0; i<360; i++){
 				if(datos[i]>0.2 && datos[i]<inf){
 					distancia=distancia+datos[i];
 					cont++;
@@ -81,7 +263,6 @@ int main (int argc, char **argv){
 
 			//Filtro de Kalman
 
-			
 			
 		}
 
