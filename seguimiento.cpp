@@ -6,7 +6,7 @@
 #include <math.h>
 
 //variables recibidas
-double x, y, theta, xd, yd, thetad, L, hz, e, a, deltax, deltay, vectx, vecty;
+double x, y, theta, xd, yd, thetad, L, hz, e, a, deltax, deltay, vectx, vecty, Velxd, Velyd;
 //variables internas de control
 bool flag1,flag2;
 //variable de signo
@@ -21,7 +21,7 @@ int sign;
 // }
 
 // callback para leer la posicion deseada del movil (posición del obstáculo)
-void poseDMessageReceived (const geometry_msgs::Twist& msg2){
+void poseMessageReceived (const geometry_msgs::Twist& msg2){
 	xd=msg2.linear.x;
 	yd=msg2.linear.y;
 	Velxd=msg2.angular.x;
@@ -97,7 +97,7 @@ int main (int argc, char **argv){
 				rho=error;
 				alpha=(atan(deltay/deltax)-theta)*180/3.1416;
 				beta=-(theta*180/3.1416)-alpha;
-				v=krho*sign*sqrt(xd² + yd²);
+				v=krho*sign*sqrt(xd*xd + yd*yd);
 				gamma=(kalpha*alpha+kbeta*beta)*sign;
 				//Poner maximo a velocidad y giro
 				if(v>6){
