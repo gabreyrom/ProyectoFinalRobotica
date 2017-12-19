@@ -89,7 +89,7 @@ int main (int argc, char **argv){
 
 
 	// Ciclo a hz Hz
-	ros::Rate rate (3);
+	ros::Rate rate (4);
 
 	while (ros::ok()) {
 	//Se toman todas las condiciones posibles para cada iteración
