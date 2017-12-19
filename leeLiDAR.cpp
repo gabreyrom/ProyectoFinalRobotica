@@ -42,11 +42,7 @@ void prediction(){
             }
         }
     }
-    ROS_INFO_STREAM("F");
-    ROS_INFO_STREAM(""<< F[0][0] << " " << F[0][1] << " "<< F[0][2] << " " << F[0][3]);
-	ROS_INFO_STREAM(""<< F[1][0] << " " << F[1][1] << " "<< F[1][2] << " " << F[1][3]);
-    ROS_INFO_STREAM(""<< F[2][0] << " " << F[2][1] << " "<< F[2][2] << " " << F[2][3]);
-    ROS_INFO_STREAM(""<< F[3][0] << " " << F[3][1] << " "<< F[3][2] << " " << F[3][3]);
+    
     //Obtener P gorro
     r1=4;
 	c1=4;
@@ -60,24 +56,12 @@ void prediction(){
             }
         }
     }
-    ROS_INFO_STREAM("AUX");
-    ROS_INFO_STREAM(""<< aux[0][0] << " " << aux[0][1] << " "<< aux[0][2] << " " << aux[0][3]);
-	ROS_INFO_STREAM(""<< aux[1][0] << " " << aux[1][1] << " "<< aux[1][2] << " " << aux[1][3]);
-    ROS_INFO_STREAM(""<< aux[2][0] << " " << aux[2][1] << " "<< aux[2][2] << " " << aux[2][3]);
-    ROS_INFO_STREAM(""<< aux[3][0] << " " << aux[3][1] << " "<< aux[3][2] << " " << aux[3][3]);
-    r=4;
-    c=4;
-    for(i = 0; i < r; ++i){
-        for(j = 0; j < c; ++j)
-        {
-            Ftrans[j][i]=F[i][j];
-        }
-	}
-	ROS_INFO_STREAM("FTRANS");
-    ROS_INFO_STREAM(""<< Ftrans[0][0] << " " << Ftrans[0][1] << " "<< Ftrans[0][2] << " " << Ftrans[0][3]);
-	ROS_INFO_STREAM(""<< Ftrans[1][0] << " " << Ftrans[1][1] << " "<< Ftrans[1][2] << " " << Ftrans[1][3]);
-    ROS_INFO_STREAM(""<< Ftrans[2][0] << " " << Ftrans[2][1] << " "<< Ftrans[2][2] << " " << Ftrans[2][3]);
-    ROS_INFO_STREAM(""<< Ftrans[3][0] << " " << Ftrans[3][1] << " "<< Ftrans[3][2] << " " << Ftrans[3][3]);
+    //ROS_INFO_STREAM("AUX");
+    //ROS_INFO_STREAM(""<< aux[0][0] << " " << aux[0][1] << " "<< aux[0][2] << " " << aux[0][3]);
+	//ROS_INFO_STREAM(""<< aux[1][0] << " " << aux[1][1] << " "<< aux[1][2] << " " << aux[1][3]);
+    //ROS_INFO_STREAM(""<< aux[2][0] << " " << aux[2][1] << " "<< aux[2][2] << " " << aux[2][3]);
+    //ROS_INFO_STREAM(""<< aux[3][0] << " " << aux[3][1] << " "<< aux[3][2] << " " << aux[3][3]);
+    
     r1=4;
 	c1=4;
 	c2=4;
@@ -91,22 +75,22 @@ void prediction(){
             P[i][j]=P[i][j]+ruidoP;
         }
     }
-    ROS_INFO_STREAM("P");
-    ROS_INFO_STREAM(""<< P[0][0] << " " << P[0][1] << " "<< P[0][2] << " " << P[0][3]);
-	ROS_INFO_STREAM(""<< P[1][0] << " " << P[1][1] << " "<< P[1][2] << " " << P[1][3]);
-    ROS_INFO_STREAM(""<< P[2][0] << " " << P[2][1] << " "<< P[2][2] << " " << P[2][3]);
-    ROS_INFO_STREAM(""<< P[3][0] << " " << P[3][1] << " "<< P[3][2] << " " << P[3][3]);
+    //ROS_INFO_STREAM("P");
+    //ROS_INFO_STREAM(""<< P[0][0] << " " << P[0][1] << " "<< P[0][2] << " " << P[0][3]);
+	//ROS_INFO_STREAM(""<< P[1][0] << " " << P[1][1] << " "<< P[1][2] << " " << P[1][3]);
+    //ROS_INFO_STREAM(""<< P[2][0] << " " << P[2][1] << " "<< P[2][2] << " " << P[2][3]);
+    //ROS_INFO_STREAM(""<< P[3][0] << " " << P[3][1] << " "<< P[3][2] << " " << P[3][3]);
 }
 
 void actualizacion(){
 	int i,j,k,r1,c1,c2,r;
 	double a, b, c, d, ruido;
 	ruido=0.1;
-	ROS_INFO_STREAM("HTRANS");
-	ROS_INFO_STREAM(""<< Htrans[0][0] << " " << Htrans[0][1]);
-	ROS_INFO_STREAM(""<< Htrans[1][0] << " " << Htrans[1][1]);
-    ROS_INFO_STREAM(""<< Htrans[2][0] << " " << Htrans[2][1]);
-    ROS_INFO_STREAM(""<< Htrans[3][0] << " " << Htrans[3][1]);
+	//ROS_INFO_STREAM("HTRANS");
+	//ROS_INFO_STREAM(""<< Htrans[0][0] << " " << Htrans[0][1]);
+	//ROS_INFO_STREAM(""<< Htrans[1][0] << " " << Htrans[1][1]);
+    //ROS_INFO_STREAM(""<< Htrans[2][0] << " " << Htrans[2][1]);
+    //ROS_INFO_STREAM(""<< Htrans[3][0] << " " << Htrans[3][1]);
 
 	//Obtener v
 	r1=2;
@@ -152,9 +136,9 @@ void actualizacion(){
 	            s[i][j]=s[i][j]+ruido;
 	        }
 	    }
-	    ROS_INFO_STREAM("S");
-	    ROS_INFO_STREAM(""<< s[0][0] << " " << s[0][1]);
-	    ROS_INFO_STREAM(""<< s[1][0] << " " << s[1][1]);
+	    //ROS_INFO_STREAM("S");
+	    //ROS_INFO_STREAM(""<< s[0][0] << " " << s[0][1]);
+	    //ROS_INFO_STREAM(""<< s[1][0] << " " << s[1][1]);
 	    
 	    //Obtener s inversa
 	    a=s[0][0];
@@ -165,9 +149,9 @@ void actualizacion(){
 	    sinv[0][1]=-b/(a*d-b*c);
 	    sinv[1][0]=-c/(a*d-b*c);
 	    sinv[1][1]=a/(a*d-b*c);
-	    ROS_INFO_STREAM("Sinv");
-	    ROS_INFO_STREAM(""<< sinv[0][0] << " " << sinv[0][1]);
-	    ROS_INFO_STREAM(""<< sinv[1][0] << " " << sinv[1][1]);
+	    //ROS_INFO_STREAM("Sinv");
+	    //ROS_INFO_STREAM(""<< sinv[0][0] << " " << sinv[0][1]);
+	    //ROS_INFO_STREAM(""<< sinv[1][0] << " " << sinv[1][1]);
 	    
 	    //Obtener K
 	    r1=4;
@@ -194,11 +178,11 @@ void actualizacion(){
 	            }
 	        }
 	    }
-	    ROS_INFO_STREAM("GanK");
-	    ROS_INFO_STREAM(""<< GanK[0][0] << " " << GanK[0][1]);
-	    ROS_INFO_STREAM(""<< GanK[1][0] << " " << GanK[1][1]);
-	    ROS_INFO_STREAM(""<< GanK[2][0] << " " << GanK[2][1]); 
-	    ROS_INFO_STREAM(""<< GanK[3][0] << " " << GanK[3][1]);
+	    //ROS_INFO_STREAM("GanK");
+	    //ROS_INFO_STREAM(""<< GanK[0][0] << " " << GanK[0][1]);
+	    //ROS_INFO_STREAM(""<< GanK[1][0] << " " << GanK[1][1]);
+	    //ROS_INFO_STREAM(""<< GanK[2][0] << " " << GanK[2][1]); 
+	    //ROS_INFO_STREAM(""<< GanK[3][0] << " " << GanK[3][1]);
 
 	    //Obtener P gorro
 	    r1=4;
@@ -226,11 +210,11 @@ void actualizacion(){
 	            }
 	        }
 	    }
-	    ROS_INFO_STREAM("Pf");
-	    ROS_INFO_STREAM(""<< Pf[0][0] << " " << Pf[0][1] << " "<< Pf[0][2] << " " << Pf[0][3]);
-		ROS_INFO_STREAM(""<< Pf[1][0] << " " << Pf[1][1] << " "<< Pf[1][2] << " " << Pf[1][3]);
-	    ROS_INFO_STREAM(""<< Pf[2][0] << " " << Pf[2][1] << " "<< Pf[2][2] << " " << Pf[2][3]);
-	    ROS_INFO_STREAM(""<< Pf[3][0] << " " << Pf[3][1] << " "<< Pf[3][2] << " " << Pf[3][3]);
+	    //ROS_INFO_STREAM("Pf");
+	    //ROS_INFO_STREAM(""<< Pf[0][0] << " " << Pf[0][1] << " "<< Pf[0][2] << " " << Pf[0][3]);
+		//ROS_INFO_STREAM(""<< Pf[1][0] << " " << Pf[1][1] << " "<< Pf[1][2] << " " << Pf[1][3]);
+	    //ROS_INFO_STREAM(""<< Pf[2][0] << " " << Pf[2][1] << " "<< Pf[2][2] << " " << Pf[2][3]);
+	    //ROS_INFO_STREAM(""<< Pf[3][0] << " " << Pf[3][1] << " "<< Pf[3][2] << " " << Pf[3][3]);
 
 	    //Obtener poseAct
 	    r1=4;
@@ -272,6 +256,26 @@ void inicializacion(){
 	F[3][2]=0;
 	F[3][3]=1;
 
+	//ROS_INFO_STREAM("F");
+    //ROS_INFO_STREAM(""<< F[0][0] << " " << F[0][1] << " "<< F[0][2] << " " << F[0][3]);
+	//ROS_INFO_STREAM(""<< F[1][0] << " " << F[1][1] << " "<< F[1][2] << " " << F[1][3]);
+    //ROS_INFO_STREAM(""<< F[2][0] << " " << F[2][1] << " "<< F[2][2] << " " << F[2][3]);
+    //ROS_INFO_STREAM(""<< F[3][0] << " " << F[3][1] << " "<< F[3][2] << " " << F[3][3]);
+
+    r=4;
+    c=4;
+    for(i = 0; i < r; ++i){
+        for(j = 0; j < c; ++j)
+        {
+            Ftrans[j][i]=F[i][j];
+        }
+	}
+	//ROS_INFO_STREAM("FTRANS");
+    //ROS_INFO_STREAM(""<< Ftrans[0][0] << " " << Ftrans[0][1] << " "<< Ftrans[0][2] << " " << Ftrans[0][3]);
+	//ROS_INFO_STREAM(""<< Ftrans[1][0] << " " << Ftrans[1][1] << " "<< Ftrans[1][2] << " " << Ftrans[1][3]);
+    //ROS_INFO_STREAM(""<< Ftrans[2][0] << " " << Ftrans[2][1] << " "<< Ftrans[2][2] << " " << Ftrans[2][3]);
+    //ROS_INFO_STREAM(""<< Ftrans[3][0] << " " << Ftrans[3][1] << " "<< Ftrans[3][2] << " " << Ftrans[3][3]);
+
 	H[0][0]=1;
 	H[0][1]=0;
 	H[0][2]=0;
@@ -311,11 +315,11 @@ void inicializacion(){
         	Pf[i][j]=1*Identity[i][j];
         }
 	}
-	ROS_INFO_STREAM("Pf");
-    ROS_INFO_STREAM(""<< Pf[0][0] << " " << Pf[0][1] << " "<< Pf[0][2] << " " << Pf[0][3]);
-	ROS_INFO_STREAM(""<< Pf[1][0] << " " << Pf[1][1] << " "<< Pf[1][2] << " " << Pf[1][3]);
-    ROS_INFO_STREAM(""<< Pf[2][0] << " " << Pf[2][1] << " "<< Pf[2][2] << " " << Pf[2][3]);
-    ROS_INFO_STREAM(""<< Pf[3][0] << " " << Pf[3][1] << " "<< Pf[3][2] << " " << Pf[3][3]);
+	//ROS_INFO_STREAM("Pf");
+    //ROS_INFO_STREAM(""<< Pf[0][0] << " " << Pf[0][1] << " "<< Pf[0][2] << " " << Pf[0][3]);
+	//ROS_INFO_STREAM(""<< Pf[1][0] << " " << Pf[1][1] << " "<< Pf[1][2] << " " << Pf[1][3]);
+    //ROS_INFO_STREAM(""<< Pf[2][0] << " " << Pf[2][1] << " "<< Pf[2][2] << " " << Pf[2][3]);
+    //ROS_INFO_STREAM(""<< Pf[3][0] << " " << Pf[3][1] << " "<< Pf[3][2] << " " << Pf[3][3]);
 }
 
 int main (int argc, char **argv){
