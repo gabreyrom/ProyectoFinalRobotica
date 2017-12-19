@@ -131,6 +131,7 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/proyecto_final_node.cpp)
 add_executable(histograma histograma.cpp)
 add_executable(seguimiento seguimiento.cpp)
+add_executable(kalman kalman.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -149,6 +150,7 @@ add_executable(seguimiento seguimiento.cpp)
 
 target_link_libraries(histograma ${catkin_LIBRARIES})
 target_link_libraries(seguimiento ${catkin_LIBRARIES})
+target_link_libraries(kalman ${catkin_LIBRARIES})
 
 #############
 ## Install ##
