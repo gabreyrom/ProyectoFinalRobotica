@@ -10,9 +10,9 @@
 //variables LiDAR
 double deltaangulo, angulomin;
 double inf = std::numeric_limits<double>::infinity();
-double poseEst[4][1], poseAct[4][1], F[4][4], H[2][4], P[4][4], Pf[4][4], s[2][2], y[2][1], z[2][1], GanK[4][2];
+double poseEst[4][1], poseAct[4][1], F[4][4], H[2][4], P[4][4], Pf[4][4], s[2][2], v[2][1], z[2][1], GanK[4][2];
 double aux[4][4], aux2[2][4], aux3[4][2], aux4[4][4], Ftrans[4][4], Htrans[4][2], sinv[2][2], Identity[4][4];
-double posx,posy, deltaT;
+double posx,posy, deltaT, ayudante;
 bool flag1, flag2;
 std::vector<float> datos;
 
@@ -81,13 +81,16 @@ void actualizacion(){
 	c2=1;
 	for(i = 0; i < r1; ++i)
         for(j = 0; j < c2; ++j){
-        	y[i][j]=0;
+        	v[i][j]=0;
             for(k = 0; k < c1; ++k)
             {
-                y[i][j] += H[i][k] * poseEst[k][j];
+                v[i][j] += H[i][k] * poseEst[k][j];
             }
-            y[i][j] = z[i][j]-y[i][j];
+            ROS_INFO_STREAM("v="<< v[i][j]);
+            v[i][j] = z[i][j]-v[i][j];
+            ROS_INFO_STREAM("v="<< v[i][j]);
         }
+    ROS_INFO_STREAM("vultima x="<< y[0][0] << " y=" << y[1][0]);
     //Obtener S
     r1=2;
 	c1=4;
@@ -121,7 +124,7 @@ void actualizacion(){
             }
         }
 
-    //Obtener S inversa
+    //Obtener s inversa
     a=s[0][0];
     b=s[0][1];
     c=s[1][0];
@@ -177,6 +180,7 @@ void actualizacion(){
                 Pf[i][j] += aux4[i][k] * P[k][j];
             }
         }
+
     //Obtener poseAct
     r1=4;
 	c1=2;
@@ -186,7 +190,7 @@ void actualizacion(){
         	poseAct[i][j]=0;
             for(k = 0; k < c1; ++k)
             {
-                poseAct[i][j] += GanK[i][k] * y[k][j];
+                poseAct[i][j] += GanK[i][k] * v[k][j];
             }
             poseAct[i][j]=poseAct[i][j]+poseEst[i][j];
         }
@@ -311,9 +315,13 @@ int main (int argc, char **argv){
 			z[0][0]=posx;
 			z[1][0]=posy;
 
+			ROS_INFO_STREAM("posx=" << posx << " posy=" << posy);
+
 			//Filtro de Kalman
 			prediction();
 			actualizacion();
+			ROS_INFO_STREAM("Pose est x"<< poseEst[0][0] << " y " << poseEst[1][0]);
+			ROS_INFO_STREAM("v x="<< v[0][0] << " y=" << v[1][0]);
 			ROS_INFO_STREAM("x="<<poseAct[0][0]<<" y="<<poseAct[1][0]<<" Velx="<<poseAct[2][0]<<" Vely="<<poseAct[3][0]);
 		}
 		
