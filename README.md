@@ -56,3 +56,5 @@ rostopic pub /AutoNOMOS_mini_2/manual_control/velocity /std_msgs/Float32 '{data:
 
 ```
 En la ventana de Gazebo se verá cómo un carro sigue al otro.
+Se puede encontrar el video explicativo en la siguiente liga:
+https://drive.google.com/open?id=1wyU1Z710jF6q_1p19PAoiZ1Q8jpiKJ3T
