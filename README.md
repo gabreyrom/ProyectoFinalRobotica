@@ -27,4 +27,29 @@ rosrun proyecto_final histograma
 ```
 En esta ventana se imprimirá la posición más probable dependiendo de los datos leídos de la bolsa.
 
-### Parte 2:
+### Parte 2 y 3:
+En esta parte se utiliza Gazebo, por lo que para inicializarlo se necesita situarse en el directorio de AutoNOMOS_simulation y correr:
+
+```
+roslaunch autonomos_gazebo straight_road.launch
+```
+Una vez abierto, se verán los dos autos. Ahora, estando en el workspace de ROS, se correrá el código que inicializará el filtro de Kalman y el código que permite seguir al otro auto después de publicar en un nodo la velocidad y ángulo de giro del carro a seguir.
+
+En una terminal:
+```
+rosrun proyecto_final kalman
+```
+En otra terminal:
+```
+rosrun proyecto_final seguimiento
+```
+En la terminal de AutoNOMOS_simulation para cambiar el giro del volante:
+```
+rostopic pub /AutoNOMOS_mini/manual_control/steering /std_msgs/Float32 '{data: VALUE}'
+```
+Para cambiar la velocidad:
+```
+rostopic pub /AutoNOMOS_mini/manual_control/velocity /std_msgs/Float32 '{data: VALUE}'
+
+```
+En la ventana de Gazebo se verá cómo un carro sigue al otro.
