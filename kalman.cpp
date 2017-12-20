@@ -101,7 +101,7 @@ void prediction(){
 //Segunda etapa del filtro de Kalman
 void actualizacion(){
 	int i,j,k,r1,c1,c2,r;
-	double a, b, c, d;
+	double a, b, c, d, error;
 
 	//Obtener v
 	r1=2;
@@ -118,10 +118,17 @@ void actualizacion(){
         }
     }
     ROS_INFO_STREAM("V x="<< v[0][0] << " y=" << v[1][0]);
-
-    if(abs(v[0][0])+abs(v[1][0])>0.005){
-    	ROS_INFO_STREAM("Entro");
-	    
+    error=0;
+    if(v[0][0]<0)
+    	error=-v[0][0];
+    else
+    	error=v[0][0];
+    if(v[1][0]<0)
+    	error=error-v[1][0];
+    else
+    	error=error+v[1][0];
+    ROS_INFO_STREAM("Error= "<<error);
+    if(error>0.05){
 	    //Obtener S
 	    r1=2;
 		c1=4;
