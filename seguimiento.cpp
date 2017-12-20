@@ -1,3 +1,12 @@
+//Proyecto Final Robotica - Parte 3
+//Equipo: Trifuerza & Ganondorf
+//Programa de control para seguir un objetivo. Las coordenas de dicho objetivo
+//son obtenidos a traves de un topico
+//Se implementa la estrategia "Mover a un punto"
+//Los comandos de velocidad y angulo de volante se mandan a traves de los topicos
+//AutoNOMOS_mini_1/manual_control/velocity y /AutoNOMOS_mini_1/manual_control/steering
+//respectivamente
+
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/Float32.h>
@@ -6,19 +15,11 @@
 #include <math.h>
 
 //variables recibidas
-double x, y, theta, xd, yd, thetad, L, hz, e, a, deltax, deltay, vectx, vecty, Velxd, Velyd;
+double xd, yd, L, hz, e, deltax, deltay, Velxd, Velyd;
 //variables internas de control
 bool flag1,flag2;
 //variable de signo
 int sign;
-
-// callback para leer la posicion del movil
-// void poseMessageReceived (const geometry_msgs::Pose2D& msg1){
-// 	x=msg1.x;
-// 	y=msg1.y;
-// 	theta=msg1.theta;
-// 	flag1=true;
-// }
 
 // callback para leer la posicion deseada del movil (posición del obstáculo)
 void poseMessageReceived (const geometry_msgs::Twist& msg2){
@@ -30,8 +31,7 @@ void poseMessageReceived (const geometry_msgs::Twist& msg2){
 	//Condiciones iniciales	
 	deltax=(xd-0);
 	deltay=(yd-0);
-	//Si el punto deseado esta detras del movil, avanza de reversa
-	ROS_INFO_STREAM("Producto punto: "<< a);
+	//Si el punto deseado esta detras del movil, el angulo es negativo
 	if (deltay<0 && deltax<0){
 		sign=-1;
 	}else{
@@ -41,7 +41,7 @@ void poseMessageReceived (const geometry_msgs::Twist& msg2){
 
 int main (int argc, char **argv){
 	//variables internas
-	double krho, kgamma, w, error;	
+	double krho, kgamma, error;	
 	//variables de publicacion
 	double v, gamma;
 
@@ -56,7 +56,6 @@ int main (int argc, char **argv){
 	ros::Publisher pubV=nh.advertise<std_msgs::Float32>("/AutoNOMOS_mini_1/manual_control/velocity",1000);
 	// Crea un objeto suscriptor
 	ros::Subscriber subP = nh.subscribe("/pose_objetivo", 1000, &poseMessageReceived);
-	//ros::Subscriber subPD = nh.subscribe("robot/next_pose", 1000, &poseDMessageReceived);
 	//Crea el objeto mensaje
 	std_msgs::Float32 msgSteering;
 	std_msgs::Float32 msgVelocity;
