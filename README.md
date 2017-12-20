@@ -1,10 +1,10 @@
 # Proyecto Final Robótica 
 ## ITAM
 
-### -Diego Amaya 149119
-### -Gabriel Reynoso 150904
-### -Gumer Rodríguez 149109
-### -Julio Sánchez 148221
+###### *Diego Amaya 149119
+###### *Gabriel Reynoso 150904
+###### *Gumer Rodríguez 149109
+###### *Julio Sánchez 148221
 
 Este repositorio incluye los programas que cumplen con las tres partes del proyecto. El archivo histograma.cpp corresponde a la primera parte (Estimación de estado propio), kalman.cpp corresponde a la segunda (Estimación de estado de obstáculo móvil) y seguimiento.cpp a la tercera (Movimiento para seguir obstáculo móvil). Este proyecto fue hecho en ROS Kinetic. Para la implementación de Gazebo se supone que ya se descargaron los modelos y se ejecuta sin problemas el EK_AutoNOMOS. La documentación está en: https://github.com/EagleKnights/SDI-11911/wiki. También que se tiene descargada la rosbag.bag del link: robotica.itam.mx/rosbags/rosbag_SDI11911.bag . La rosbag debe estar dentro del workspace.
 El primer paso es situarse en la carpeta src y clonar este repositorio mediante el comando:
