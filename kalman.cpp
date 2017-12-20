@@ -1,4 +1,4 @@
-//Proyecto Final Robotica - Parte 2
+/*Proyecto Final Robotica - Parte 2
 //Equipo: Trifuerza & Ganondorf
 //Programa para calcular la pose de un obstaculo/auto con las mediciones de un
 //LiDAR obtenidas a traves de un topico.
@@ -7,7 +7,7 @@
 //Resultado se publica en un topico de tipo Twist llamado /pose_objetivo
 //linear.x y linear.y son las coordenadas
 //angular.x y angular.y son las velocidades (lineales)
-
+*/
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>

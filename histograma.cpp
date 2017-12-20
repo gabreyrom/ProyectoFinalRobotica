@@ -1,5 +1,11 @@
 //Proyecto Final Robotica - Parte1
 //Equipo: Trifuerza & Ganondorf
+//Programa para estimar el estado actual de un carro por medio de visión, se reciben tres nubes de
+//puntos que contienen cada una de las líneas, publicadas por una bolsa en un tópico.
+//Se aplica un filtro de histogramas para estimar el estado actual.
+//El resultado se publica en el tópico /estadoEstimado tipo Float32 Multiarray de 1x8 en el que 
+//cada casilla contiene la probabilidad de estar en un estado específico.
+//
 
 #include <ros/ros.h>
 #include <geometry_msgs/Pose2D.h>
