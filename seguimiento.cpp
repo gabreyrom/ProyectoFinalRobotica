@@ -67,7 +67,7 @@ int main (int argc, char **argv){
 	L=0.32;
 
 	//Valores de control
-	krho=3;
+	krho=4;
 	kgamma=2;
 	
 	e=1;
